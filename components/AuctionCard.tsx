@@ -1,11 +1,10 @@
-import { View, Text, Image, Pressable } from 'react-native';
+import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 import { Person } from '../types';
 import { Heart } from 'lucide-react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  runOnJS,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
@@ -21,17 +20,20 @@ export function AuctionCard({ person, onSwipe, onTap }: AuctionCardProps) {
 
   const panGesture = Gesture.Pan()
     .onStart(() => {
+      'worklet';
       startX.value = translateX.value;
     })
     .onUpdate((event) => {
+      'worklet';
       translateX.value = startX.value + event.translationX;
     })
     .onEnd((event) => {
+      'worklet';
       if (event.translationX > 100) {
-        runOnJS(onSwipe)('right');
+        onSwipe('right');
         translateX.value = withSpring(0);
       } else if (event.translationX < -100) {
-        runOnJS(onSwipe)('left');
+        onSwipe('left');
         translateX.value = withSpring(0);
       } else {
         translateX.value = withSpring(0);
@@ -50,37 +52,34 @@ export function AuctionCard({ person, onSwipe, onTap }: AuctionCardProps) {
 
   return (
     <GestureDetector gesture={panGesture}>
-      <Animated.View
-        style={animatedStyle}
-        className="absolute inset-4 bg-white rounded-3xl shadow-2xl overflow-hidden"
-      >
-        <Pressable onPress={onTap} className="h-full">
-          <View className="relative h-full">
+      <Animated.View style={[styles.card, animatedStyle]}>
+        <Pressable onPress={onTap} style={styles.pressable}>
+          <View style={styles.container}>
             <Image
               source={{ uri: person.image }}
-              className="w-full h-full"
+              style={styles.image}
               resizeMode="cover"
             />
             
             {/* Gradient overlay */}
-            <View className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            <View style={styles.gradient} />
             
             {/* Content */}
-            <View className="absolute bottom-0 left-0 right-0 p-6">
-              <View className="flex-row items-center gap-2 mb-2">
+            <View style={styles.content}>
+              <View style={styles.bidsContainer}>
                 <Heart size={20} color="#ec4899" fill="#ec4899" />
-                <Text className="text-sm text-white opacity-90">{person.bids} Likes</Text>
+                <Text style={styles.bidsText}>{person.bids} Likes</Text>
               </View>
               
-              <Text className="text-2xl font-bold mb-1 text-white">
+              <Text style={styles.name}>
                 {person.name}, {person.age}
               </Text>
               
-              <Text className="text-sm text-white opacity-90 mb-3" numberOfLines={2}>
+              <Text style={styles.bio} numberOfLines={2}>
                 {person.bio}
               </Text>
               
-              <Text className="text-xs text-white opacity-75">
+              <Text style={styles.auctionedBy}>
                 Posted by {person.auctionedBy}
               </Text>
             </View>
@@ -90,3 +89,75 @@ export function AuctionCard({ person, onSwipe, onTap }: AuctionCardProps) {
     </GestureDetector>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    position: 'absolute',
+    top: 16,
+    left: 16,
+    right: 16,
+    bottom: 16,
+    backgroundColor: '#ffffff',
+    borderRadius: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 25 },
+    shadowOpacity: 0.5,
+    shadowRadius: 50,
+    elevation: 25,
+    overflow: 'hidden',
+  },
+  pressable: {
+    height: '100%',
+  },
+  container: {
+    position: 'relative',
+    height: '100%',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  gradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  },
+  content: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 24,
+  },
+  bidsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  bidsText: {
+    fontSize: 14,
+    color: '#ffffff',
+    opacity: 0.9,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 4,
+    color: '#ffffff',
+  },
+  bio: {
+    fontSize: 14,
+    color: '#ffffff',
+    opacity: 0.9,
+    marginBottom: 12,
+  },
+  auctionedBy: {
+    fontSize: 12,
+    color: '#ffffff',
+    opacity: 0.75,
+  },
+});

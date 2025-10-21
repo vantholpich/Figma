@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Search, Calendar, User } from 'lucide-react-native';
 import { ViewType } from '../types';
 
@@ -15,24 +15,23 @@ export function BottomNavigation({ currentView, onViewChange }: BottomNavigation
   ];
 
   return (
-    <View className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-4">
-      <View className="flex-row justify-between">
+    <View style={styles.container}>
+      <View style={styles.navContainer}>
         {navItems.map(({ id, label, icon: Icon }) => (
           <Pressable
             key={id}
             onPress={() => onViewChange(id)}
-            className={`flex-col items-center gap-1 px-4 py-2 rounded-lg ${
-              currentView === id ? '' : ''
-            }`}
+            style={styles.navItem}
           >
             <Icon
               size={24}
               color={currentView === id ? '#db2777' : '#9ca3af'}
             />
             <Text
-              className={`text-xs font-medium ${
-                currentView === id ? 'text-pink-600' : 'text-gray-400'
-              }`}
+              style={[
+                styles.navLabel,
+                currentView === id ? styles.navLabelActive : styles.navLabelInactive
+              ]}
             >
               {label}
             </Text>
@@ -42,3 +41,39 @@ export function BottomNavigation({ currentView, onViewChange }: BottomNavigation
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#ffffff',
+    borderTopWidth: 1,
+    borderTopColor: '#e5e7eb',
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+  },
+  navContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  navItem: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  navLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  navLabelActive: {
+    color: '#db2777',
+  },
+  navLabelInactive: {
+    color: '#9ca3af',
+  },
+});

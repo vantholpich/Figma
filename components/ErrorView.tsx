@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 interface ErrorViewProps {
   error: string;
@@ -6,11 +6,31 @@ interface ErrorViewProps {
 
 export function ErrorView({ error }: ErrorViewProps) {
   return (
-    <View className="flex-1 bg-gray-50 items-center justify-center px-6">
-      <Text className="text-red-600 text-center mb-2">Error: {error}</Text>
-      <Text className="text-sm text-gray-600 text-center">
+    <View style={styles.container}>
+      <Text style={styles.errorText}>Error: {error}</Text>
+      <Text style={styles.helpText}>
         Make sure your Supabase credentials are configured in .env.local
       </Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f9fafb',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  errorText: {
+    color: '#dc2626',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  helpText: {
+    fontSize: 14,
+    color: '#4b5563',
+    textAlign: 'center',
+  },
+});

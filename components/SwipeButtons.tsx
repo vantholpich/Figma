@@ -1,4 +1,4 @@
-import { View, Pressable } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native';
 import { X, Heart } from 'lucide-react-native';
 
 interface SwipeButtonsProps {
@@ -8,20 +8,58 @@ interface SwipeButtonsProps {
 
 export function SwipeButtons({ onSwipeLeft, onSwipeRight }: SwipeButtonsProps) {
   return (
-    <View className="flex-row justify-center gap-8 px-6 pb-6">
+    <View style={styles.container}>
       <Pressable
         onPress={onSwipeLeft}
-        className="w-16 h-16 rounded-full bg-white shadow-lg items-center justify-center border border-gray-200"
+        style={styles.leftButton}
       >
         <X size={32} color="#ef4444" />
       </Pressable>
       
       <Pressable
         onPress={onSwipeRight}
-        className="w-20 h-20 rounded-full bg-gradient-to-r from-pink-500 to-red-500 shadow-lg items-center justify-center"
+        style={styles.rightButton}
       >
         <Heart size={36} color="#ffffff" fill="#ffffff" />
       </Pressable>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 32,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
+  },
+  leftButton: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.15,
+    shadowRadius: 15,
+    elevation: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  rightButton: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#ec4899',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.15,
+    shadowRadius: 15,
+    elevation: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Person } from '../types';
 import { AuctionCard } from './AuctionCard';
 import { SwipeButtons } from './SwipeButtons';
@@ -25,11 +25,11 @@ export function AuctionsView({ people, onPersonSelect }: AuctionsViewProps) {
 
   if (currentIndex >= people.length) {
     return (
-      <View className="flex-1 items-center justify-center p-6">
-        <Text className="text-2xl font-bold text-gray-800 mb-2">
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyTitle}>
           No more auctions
         </Text>
-        <Text className="text-gray-600 text-center">
+        <Text style={styles.emptyText}>
           Check back later for new people to bid on!
         </Text>
       </View>
@@ -37,13 +37,13 @@ export function AuctionsView({ people, onPersonSelect }: AuctionsViewProps) {
   }
 
   return (
-    <View className="flex-1 pt-12 pb-20">
-      <View className="px-6 mb-6">
-        <Text className="text-3xl font-bold text-gray-800">Date</Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Date</Text>
       </View>
 
-      <View className="flex-1 relative">
-        {people.slice(currentIndex, currentIndex + 2).map((person, index) => (
+      <View style={styles.cardContainer}>
+        {people.slice(currentIndex, currentIndex + 2).map((person) => (
           <AuctionCard
             key={person.id}
             person={person}
@@ -60,3 +60,40 @@ export function AuctionsView({ people, onPersonSelect }: AuctionsViewProps) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 48,
+    paddingBottom: 80,
+  },
+  header: {
+    paddingHorizontal: 24,
+    marginBottom: 24,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#1f2937',
+  },
+  cardContainer: {
+    flex: 1,
+    position: 'relative',
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  emptyTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1f2937',
+    marginBottom: 8,
+  },
+  emptyText: {
+    color: '#4b5563',
+    textAlign: 'center',
+  },
+});
